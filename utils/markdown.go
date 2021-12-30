@@ -21,7 +21,7 @@ func H3(title string) string {
 }
 
 func KeyValue(key string, value string) string {
-	return fmt.Sprintf("**%s**: %s\n", key, value)
+	return fmt.Sprintf("%s: %s\n", key, value)
 }
 
 func formatFileName(title string) string {
