@@ -16,27 +16,38 @@ func buildTag(tagType string, tagValue string) string {
 
 func FormatResult(result itunes.SearchResult) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("# %s\n\n", result.TrackName))
+	sb.WriteString(fmt.Sprintf("# %s\n", result.TrackName))
+	sb.WriteString(fmt.Sprintf("%s/%s\n\n", tagPrefix, result.MediaType))
 	if result.Description != "" {
 		sb.WriteString(fmt.Sprintf("## Synopsis\n%s\n\n", result.Description))
 	}
 
 	sb.WriteString("\n## Author\n")
-	if result.ArtistName != "" {
-		sb.WriteString(fmt.Sprintf("%s\n", buildTag("authors", result.ArtistName)))
+	if len(result.Artists) > 0 {
+		for _, artist := range result.Artists {
+			sb.WriteString(fmt.Sprintf("%s\n", buildTag("authors", artist)))
+		}
 	}
 
 	sb.WriteString("\n## Genre\n")
 	for _, genre := range result.Genres {
-		sb.WriteString(fmt.Sprintf("%s\n", buildTag("genres", genre)))
+		if genre != "Books" {
+			sb.WriteString(fmt.Sprintf("%s\n", buildTag("genres", genre)))
+		}
 	}
 
 	sb.WriteString(fmt.Sprintf("- - - -\n ![](%s)\n", result.ArtworkUrl))
 	return sb.String()
 }
 
-func SaveToFile(formatted string, filename string) {
-	err := os.WriteFile(filename, []byte(formatted), 0644)
+func formatFileName(title string) string {
+	filename := title
+	filename = strings.Replace(title, " ", "_", -1)
+	return fmt.Sprintf("%s.md", strings.ToLower(filename))
+}
+
+func SaveToFile(formatted string, title string) {
+	err := os.WriteFile(formatFileName(title), []byte(formatted), 0644)
 	if err != nil {
 		log.Fatal(err)
 	}

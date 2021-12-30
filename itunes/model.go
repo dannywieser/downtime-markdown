@@ -2,8 +2,6 @@ package itunes
 
 import "time"
 
-const apiPath = "https://itunes.apple.com/search"
-
 type SearchResultWrapper struct {
 	ResultCount int            `json:"resultCount"`
 	Results     []SearchResult `json:"results"`
@@ -14,9 +12,22 @@ type SearchResult struct {
 	LongDescription string `json:"longDescription"`
 	Description     string `json:"description"`
 	ArtistName      string `json:"ArtistName"`
+	ArtistIds       []int  `json:"ArtistIds"`
 	ArtworkUrl      string `json:"artworkUrl100"`
 	Genres          []string
 	ReleaseDate     time.Time
+	Artists         []string
+	MediaType       string
+}
+
+type ArtistResultWrapper struct {
+	ResultCount int            `json:"resultCount"`
+	Results     []ArtistResult `json:"results"`
+}
+
+type ArtistResult struct {
+	Name string `json:"artistName"`
+	Url  string `json:"artistLinkUrl"`
 }
 
 type SearchParams struct {

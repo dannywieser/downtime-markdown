@@ -9,7 +9,7 @@ import (
 
 func main() {
 	var title = flag.String("title", "", "Title to search for")
-	var mediaType = flag.String("type", "", "book|movie|tv|app")
+	var mediaType = flag.String("type", "", "books|movies|tv|apps")
 	var debug = flag.Bool("debug", false, "Enable debug mode")
 	flag.Parse()
 
@@ -22,5 +22,5 @@ func main() {
 	result := itunes.DoSearch(params)
 	markdown := output.FormatResult(result)
 	fmt.Print(markdown)
-	output.SaveToFile(markdown, "test.md")
+	output.SaveToFile(markdown, *title)
 }

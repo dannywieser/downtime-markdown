@@ -10,13 +10,18 @@ import (
 )
 
 const (
-	limit   = "1" // default to one result - use additional search terms to narrow the result
-	timeout = time.Second * 2
+	limit      = "1" // default to one result - use additional search terms to narrow the result
+	timeout    = time.Second * 2
+	searchPath = "https://itunes.apple.com/search"
 )
+
+var typeMap = map[string]string{
+	"books": "ebook",
+}
 
 func BuildQueryParams(req *http.Request, search SearchParams) {
 	q := req.URL.Query()
-	q.Add("media", search.MediaType)
+	q.Add("media", typeMap[search.MediaType])
 	q.Add("term", search.Title)
 	q.Add("limit", limit)
 	req.URL.RawQuery = q.Encode()
@@ -25,7 +30,7 @@ func BuildQueryParams(req *http.Request, search SearchParams) {
 func DoSearch(search SearchParams) SearchResult {
 	client := http.Client{Timeout: timeout}
 
-	req, err := http.NewRequest(http.MethodGet, apiPath, nil)
+	req, err := http.NewRequest(http.MethodGet, searchPath, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,6 +60,6 @@ func DoSearch(search SearchParams) SearchResult {
 	}
 
 	result := response.Results[0]
-	parseResult(&result)
+	parseResult(&result, search)
 	return result
 }
