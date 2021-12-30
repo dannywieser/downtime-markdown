@@ -28,7 +28,7 @@ func BuildQueryParams(req *http.Request, search SearchParams) {
 		queryLimit = "1"
 	}
 	q := req.URL.Query()
-	q.Add("media", search.MediaType)
+	q.Add("media", typeMap[search.MediaType])
 	q.Add("term", search.Title)
 	q.Add("attribute", "titleTerm")
 

@@ -13,10 +13,6 @@ const (
 	lookupPath = "https://itunes.apple.com/lookup"
 )
 
-func buildLookupParams(req *http.Request, id int) {
-
-}
-
 func LookupArtist(id int) ArtistResult {
 	client := http.Client{Timeout: timeout}
 
