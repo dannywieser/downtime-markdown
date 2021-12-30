@@ -5,7 +5,6 @@ import (
 	"dgw/downtime/config"
 	"dgw/downtime/utils"
 	"flag"
-	"fmt"
 )
 
 func main() {
@@ -14,7 +13,6 @@ func main() {
 	var debug = flag.Bool("debug", false, "Enable debug mode")
 	flag.Parse()
 	config.DebugMode = *debug
-	fmt.Println(title, mediaType)
 
 	markdown := ""
 	if *mediaType == "books" {

@@ -8,20 +8,15 @@ import (
 	"strings"
 )
 
-func mergeResults(itunes itunes.SearchResult, ol openlibrary.OpenLibraryBook) Book {
+func mergeResults(itunes itunes.SearchResult, ol openlibrary.OpenLibrarySearchResult) Book {
 	var book Book
 
 	// info from open library
 	book.Title = ol.Title
-	book.Published = ol.Published
+	book.FirstPublished = ol.FirstPublishYear
 	book.PageCount = ol.Pages
-	book.CoverImageUrl = ol.Cover.Medium
-	for _, olAuthor := range ol.Authors {
-		book.Authors = append(book.Authors, Author{
-			Name: olAuthor.Name,
-			Url:  olAuthor.Url,
-		})
-	}
+	book.CoverImageUrl = ol.CoverImageUrl
+	book.Authors = ol.Author
 
 	// info from itunes
 	book.Genres = itunes.Genres
@@ -38,7 +33,7 @@ func generateAuthorMarkdown(book Book) string {
 	}
 	sb.WriteString(utils.H2(label))
 	for _, author := range book.Authors {
-		sb.WriteString(fmt.Sprintf("%s\n", utils.BuildTag("authors", author.Name)))
+		sb.WriteString(fmt.Sprintf("%s\n", utils.BuildTag("authors", author)))
 	}
 	sb.WriteString("\n")
 	return sb.String()
@@ -65,7 +60,7 @@ func generateDetailsMarkdown(book Book) string {
 	sb.WriteString(utils.KeyValue("Status", utils.DefaultTag()))
 	sb.WriteString(utils.KeyValue("Type", utils.BuildTag("books")))
 	sb.WriteString(utils.KeyValue("Pages", fmt.Sprintf("%d", book.PageCount)))
-	sb.WriteString(utils.KeyValue("Published", book.Published))
+	sb.WriteString(utils.KeyValue("First Published", fmt.Sprintf("%d", book.FirstPublished)))
 	sb.WriteString("\n")
 	return sb.String()
 }

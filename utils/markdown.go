@@ -31,9 +31,13 @@ func formatFileName(title string) string {
 }
 
 func SaveToFile(formatted string, title string) {
-	err := os.WriteFile(formatFileName(title), []byte(formatted), 0644)
+	err := os.MkdirAll(config.Outdir, os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("  🗄 Saved output to `%s`\n", formatFileName(title))
+	err = os.WriteFile(formatFileName(title), []byte(formatted), 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("  🗄  Saved output to `%s`\n", formatFileName(title))
 }

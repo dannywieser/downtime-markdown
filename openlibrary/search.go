@@ -9,12 +9,12 @@ import (
 
 const (
 	searchPath = "http://openlibrary.org/search.json"
+	coverPath  = "https://covers.openlibrary.org/b/id"
 )
 
-func DoSearch(title string) OpenLibraryBook {
+func DoSearch(title string) OpenLibrarySearchResult {
 	params := make(map[string]string)
 	params["q"] = fmt.Sprintf("title:%s", title)
-	//params["fields"] = "title,author_name,isbn"
 	responseBody := utils.DoGet(searchPath, params)
 
 	var response searchResultWrapper
@@ -23,17 +23,11 @@ func DoSearch(title string) OpenLibraryBook {
 		log.Fatal(jsonErr)
 	}
 
-	var result OpenLibraryBook
+	var result OpenLibrarySearchResult
 	if response.NumFound > 0 {
+		result = response.Docs[0] // assume the first result is the closest match
+		result.CoverImageUrl = fmt.Sprintf("%s/%d-M.jpg", coverPath, result.CoverId)
 		fmt.Printf("  ✅ Open Library API\n")
-		isbns := response.Docs[0].ISBN
-		// iterate over isbns to find one that gives us page number
-		for _, isbn := range isbns {
-			book := getBook(isbn)
-			if book.Pages > 1 {
-				return book
-			}
-		}
 	} else {
 		fmt.Printf("  ❌ Open Library API\n")
 	}

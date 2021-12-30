@@ -2,22 +2,18 @@ package openlibrary
 
 type searchResultWrapper struct {
 	NumFound int
-	Docs     []docsResult
+	Docs     []OpenLibrarySearchResult
 }
 
-type docsResult struct {
-	Seed   []string
-	Title  string
-	Author string
-	ISBN   []string `json:"isbn"`
-}
-
-type OpenLibraryBook struct {
-	Title     string
-	Published string `json:"publish_date"`
-	Pages     int    `json:"number_of_pages"`
-	Cover     OpenLibraryCover
-	Authors   []OpenLibraryAuthor
+type OpenLibrarySearchResult struct {
+	Seed             []string
+	Title            string
+	Author           []string `json:"author_name"`
+	ISBN             []string `json:"isbn"`
+	CoverId          int      `json:"cover_i"`
+	FirstPublishYear int      `json:"first_publish_year"`
+	Pages            int      `json:"number_of_pages_median"`
+	CoverImageUrl    string
 }
 
 type OpenLibraryAuthor struct {

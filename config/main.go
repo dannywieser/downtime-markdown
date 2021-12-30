@@ -8,6 +8,6 @@ const (
 	H3Prefix   = "###"
 	RootTag    = "downtime"
 	GenreTag   = "genres"
-	DefaultTag = "thepile"
-	Outdir     = "out"
+	DefaultTag = "!tosort"
+	Outdir     = "downtime"
 )
