@@ -63,6 +63,7 @@ func generateDetailsMarkdown(book Book) string {
 	sb.WriteString(utils.H2("Details"))
 	sb.WriteString(utils.KeyValue("Duration", "N/A"))
 	sb.WriteString(utils.KeyValue("Status", utils.DefaultTag()))
+	sb.WriteString(utils.KeyValue("Type", utils.BuildTag("books")))
 	sb.WriteString(utils.KeyValue("Pages", fmt.Sprintf("%d", book.PageCount)))
 	sb.WriteString(utils.KeyValue("Published", book.Published))
 	sb.WriteString("\n")
