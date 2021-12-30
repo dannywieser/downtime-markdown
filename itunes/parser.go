@@ -4,18 +4,19 @@ import (
 	"strings"
 )
 
-var htmlToMarkDownMap = map[string]string{
-	"<b>":    "**",
-	"</b>":   "**",
+var htmlMap = map[string]string{
+	"<b>":    "",
+	"</b>":   "",
 	"<i>":    "",
 	"</i>":   "",
 	"<br />": "\n",
-	"&#xa0;": "",
+	"&#xa0;": " ",
+	"•":      "\n",
 }
 
 func replaceHtmlWithMarkdown(stringToParse string) string {
 	updatedString := stringToParse
-	for htmlString, markdownReplacement := range htmlToMarkDownMap {
+	for htmlString, markdownReplacement := range htmlMap {
 		updatedString = strings.Replace(updatedString, htmlString, markdownReplacement, -1)
 	}
 	return updatedString

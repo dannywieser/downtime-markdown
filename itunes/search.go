@@ -19,7 +19,7 @@ func DoSearch(title string, media string, author string) SearchResult {
 	params["media"] = media
 	if author != "" {
 		params["attribute"] = "authorTerm"
-		params["term"] = author
+		params["term"] = fmt.Sprintf("%s %s", author, title)
 	} else {
 		params["term"] = title
 	}
