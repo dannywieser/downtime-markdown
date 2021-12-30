@@ -12,9 +12,12 @@ const (
 	coverPath  = "https://covers.openlibrary.org/b/id"
 )
 
-func DoSearch(title string) OpenLibrarySearchResult {
+func DoSearch(title string, author string) OpenLibrarySearchResult {
 	params := make(map[string]string)
-	params["q"] = fmt.Sprintf("title:%s", title)
+	params["title"] = title
+	if author != "" {
+		params["author"] = author
+	}
 	responseBody := utils.DoGet(searchPath, params)
 
 	var response searchResultWrapper

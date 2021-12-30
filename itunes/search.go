@@ -1,12 +1,10 @@
 package itunes
 
 import (
-	"dgw/downtime/config"
 	"dgw/downtime/utils"
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"time"
 )
 
@@ -16,25 +14,15 @@ const (
 	searchPath = "https://itunes.apple.com/search"
 )
 
-func BuildQueryParams(req *http.Request, title string, media string) {
-	queryLimit := limit
-	if config.DebugMode {
-		queryLimit = "1"
-	}
-	q := req.URL.Query()
-	q.Add("media", media)
-	q.Add("term", title)
-	q.Add("attribute", "titleTerm")
-
-	q.Add("limit", queryLimit)
-	req.URL.RawQuery = q.Encode()
-}
-
-func DoSearch(title string, media string) SearchResult {
+func DoSearch(title string, media string, author string) SearchResult {
 	params := make(map[string]string)
 	params["media"] = media
-	params["term"] = title
-	//params["attribute"] = "titleTerm"
+	if author != "" {
+		params["attribute"] = "authorTerm"
+		params["term"] = author
+	} else {
+		params["term"] = title
+	}
 	params["limit"] = limit
 	responseBody := utils.DoGet(searchPath, params)
 

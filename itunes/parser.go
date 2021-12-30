@@ -10,6 +10,7 @@ var htmlToMarkDownMap = map[string]string{
 	"<i>":    "",
 	"</i>":   "",
 	"<br />": "\n",
+	"&#xa0;": "",
 }
 
 func replaceHtmlWithMarkdown(stringToParse string) string {

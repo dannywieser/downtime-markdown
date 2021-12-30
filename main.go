@@ -9,6 +9,7 @@ import (
 
 func main() {
 	var title = flag.String("title", "", "Title to search for")
+	var author = flag.String("author", "", "Author")
 	var mediaType = flag.String("type", "", "books|movies|tv|apps")
 	var debug = flag.Bool("debug", false, "Enable debug mode")
 	flag.Parse()
@@ -16,7 +17,7 @@ func main() {
 
 	markdown := ""
 	if *mediaType == "books" {
-		markdown = books.GenerateBookMarkdown(*title)
+		markdown = books.GenerateBookMarkdown(*title, *author)
 	}
 	utils.SaveToFile(markdown, *title)
 }

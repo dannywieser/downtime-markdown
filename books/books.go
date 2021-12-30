@@ -16,7 +16,11 @@ func mergeResults(itunes itunes.SearchResult, ol openlibrary.OpenLibrarySearchRe
 	book.FirstPublished = ol.FirstPublishYear
 	book.PageCount = ol.Pages
 	book.CoverImageUrl = ol.CoverImageUrl
-	book.Authors = ol.Author
+	for _, author := range ol.Author {
+		if !utils.Contains(book.Authors, author) {
+			book.Authors = append(book.Authors, author)
+		}
+	}
 
 	// info from itunes
 	book.Genres = itunes.Genres
@@ -78,10 +82,10 @@ func bookToMarkdown(book Book) string {
 	return sb.String()
 }
 
-func GenerateBookMarkdown(title string) string {
+func GenerateBookMarkdown(title string, author string) string {
 	fmt.Printf("Generating markdown for \"%s\"\n", title)
-	itunesResult := itunes.DoSearch(title, "ebook")
-	olResult := openlibrary.DoSearch(title)
+	itunesResult := itunes.DoSearch(title, "ebook", author)
+	olResult := openlibrary.DoSearch(title, author)
 	book := mergeResults(itunesResult, olResult)
 	return bookToMarkdown(book)
 }
