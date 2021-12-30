@@ -14,6 +14,7 @@ type SearchResult struct {
 	LongDescription string `json:"longDescription"`
 	Description     string `json:"description"`
 	ArtistName      string `json:"ArtistName"`
+	ArtworkUrl      string `json:"artworkUrl100"`
 	Genres          []string
 	ReleaseDate     time.Time
 }

@@ -2,9 +2,8 @@ package main
 
 import (
 	itunes "dgw/downtime/itunes"
+	output "dgw/downtime/output"
 	"flag"
-	"fmt"
-	"strings"
 )
 
 func main() {
@@ -20,9 +19,5 @@ func main() {
 	}
 
 	results := itunes.DoSearch(params)
-	firstResult := results[0]
-	fmt.Printf("# %s\n\n", firstResult.TrackName)
-	fmt.Printf("## Synopsis\n%s\n\n", firstResult.Description)
-	fmt.Printf("## Author\n%s\n\n", firstResult.ArtistName)
-	fmt.Printf("## Genres\n%s\n\n", strings.Join(firstResult.Genres, "\n"))
+	output.FormatResult(results[0])
 }
