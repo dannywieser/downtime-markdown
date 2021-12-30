@@ -39,5 +39,5 @@ func SaveToFile(formatted string, title string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("  🗄  Saved output to `%s`\n", formatFileName(title))
+	fmt.Printf("  🗄  Saved markdown for `%s` to `%s`\n", title, formatFileName(title))
 }

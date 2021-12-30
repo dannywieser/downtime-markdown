@@ -83,7 +83,6 @@ func bookToMarkdown(book Book) string {
 }
 
 func GenerateBookMarkdown(title string, author string) string {
-	fmt.Printf("Generating markdown for \"%s\"\n", title)
 	itunesResult := itunes.DoSearch(title, "ebook", author)
 	olResult := openlibrary.DoSearch(title, author)
 	book := mergeResults(itunesResult, olResult)

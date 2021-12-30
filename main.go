@@ -5,6 +5,7 @@ import (
 	"dgw/downtime/config"
 	"dgw/downtime/utils"
 	"flag"
+	"fmt"
 )
 
 func main() {
@@ -17,6 +18,9 @@ func main() {
 
 	markdown := ""
 	if *mediaType == "books" {
+		fmt.Println("🔎 Searching..")
+		fmt.Printf(" Title: %s\n", *title)
+		fmt.Printf(" Author: %s\n", *author)
 		markdown = books.GenerateBookMarkdown(*title, *author)
 	}
 	utils.SaveToFile(markdown, *title)
