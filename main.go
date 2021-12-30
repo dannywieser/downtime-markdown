@@ -3,8 +3,8 @@ package main
 import (
 	"dgw/downtime/books"
 	"dgw/downtime/config"
+	"dgw/downtime/utils"
 	"flag"
-	"fmt"
 )
 
 func main() {
@@ -18,7 +18,5 @@ func main() {
 	if *mediaType == "books" {
 		markdown = books.GenerateBookMarkdown(*title)
 	}
-
-	fmt.Printf("\n\n======== Results ==========\n\n")
-	fmt.Print(markdown)
+	utils.SaveToFile(markdown, *title)
 }

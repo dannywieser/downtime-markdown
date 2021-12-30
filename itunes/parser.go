@@ -7,8 +7,8 @@ import (
 var htmlToMarkDownMap = map[string]string{
 	"<b>":    "**",
 	"</b>":   "**",
-	"<i>":    "*",
-	"</i>":   "*",
+	"<i>":    "",
+	"</i>":   "",
 	"<br />": "\n",
 }
 
@@ -32,8 +32,19 @@ func getSynopsis(result SearchResult) string {
 	return "Not Available"
 }
 
+func filterGenres(result *SearchResult) {
+	var filtered []string
+	for _, genre := range result.Genres {
+		if !(strings.Contains(strings.ToLower(genre), "books")) {
+			filtered = append(filtered, genre)
+		}
+	}
+	result.Genres = filtered
+}
+
 func parseResult(result *SearchResult) {
 	// TODO: artists?
 	result.ArtworkUrl = strings.Replace(result.ArtworkUrl, "100x100", "200x200", 1)
 	result.Synopsis = getSynopsis(*result)
+	filterGenres(result)
 }

@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"dgw/downtime/config"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -35,6 +37,10 @@ func DoGet(url string, params map[string]string) []byte {
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
 		log.Fatal(readErr)
+	}
+
+	if config.DebugMode {
+		fmt.Printf("URL: %s\n Result %s\n", req.URL, string(body))
 	}
 
 	return body

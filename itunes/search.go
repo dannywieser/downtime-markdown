@@ -34,7 +34,7 @@ func DoSearch(title string, media string) SearchResult {
 	params := make(map[string]string)
 	params["media"] = media
 	params["term"] = title
-	params["attribute"] = "titleTerm"
+	//params["attribute"] = "titleTerm"
 	params["limit"] = limit
 	responseBody := utils.DoGet(searchPath, params)
 

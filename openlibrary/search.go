@@ -14,7 +14,7 @@ const (
 func DoSearch(title string) OpenLibraryBook {
 	params := make(map[string]string)
 	params["q"] = fmt.Sprintf("title:%s", title)
-	params["fields"] = "title,author_name,isbn"
+	//params["fields"] = "title,author_name,isbn"
 	responseBody := utils.DoGet(searchPath, params)
 
 	var response searchResultWrapper
@@ -26,7 +26,14 @@ func DoSearch(title string) OpenLibraryBook {
 	var result OpenLibraryBook
 	if response.NumFound > 0 {
 		fmt.Printf("  ✅ Open Library API\n")
-		result = getBook(response.Docs[0].ISBN[0])
+		isbns := response.Docs[0].ISBN
+		// iterate over isbns to find one that gives us page number
+		for _, isbn := range isbns {
+			book := getBook(isbn)
+			if book.Pages > 1 {
+				return book
+			}
+		}
 	} else {
 		fmt.Printf("  ❌ Open Library API\n")
 	}

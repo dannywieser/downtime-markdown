@@ -40,20 +40,46 @@ func generateAuthorMarkdown(book Book) string {
 	for _, author := range book.Authors {
 		sb.WriteString(fmt.Sprintf("%s\n", utils.BuildTag("authors", author.Name)))
 	}
+	sb.WriteString("\n")
+	return sb.String()
+}
+
+func generateGenreMarkdown(book Book) string {
+	var sb strings.Builder
+	label := "Genre"
+	if len(book.Genres) > 1 {
+		label = "Genres"
+	}
+	sb.WriteString(utils.H2(label))
+	for _, genre := range book.Genres {
+		sb.WriteString(fmt.Sprintf("%s\n", utils.BuildTag("genres", genre)))
+	}
+	sb.WriteString("\n")
+	return sb.String()
+}
+
+func generateDetailsMarkdown(book Book) string {
+	var sb strings.Builder
+	sb.WriteString(utils.H2("Details"))
+	sb.WriteString(utils.KeyValue("Duration", "N/A"))
+	sb.WriteString(utils.KeyValue("Status", utils.DefaultTag()))
+	sb.WriteString(utils.KeyValue("Pages", fmt.Sprintf("%d", book.PageCount)))
+	sb.WriteString(utils.KeyValue("Published", book.Published))
+	sb.WriteString("\n")
 	return sb.String()
 }
 
 func bookToMarkdown(book Book) string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("# %s\n", book.Title))
-
 	sb.WriteString(generateAuthorMarkdown(book))
-	sb.WriteString(utils.H2("Details"))
-	sb.WriteString(utils.KeyValue("Pages", fmt.Sprintf("%d", book.PageCount)))
-	sb.WriteString(utils.KeyValue("Published", book.Published))
+	sb.WriteString(generateDetailsMarkdown(book))
+	sb.WriteString(generateGenreMarkdown(book))
+	sb.WriteString(utils.H2("Synopsis"))
+	sb.WriteString(book.Synopsis)
+	sb.WriteString(fmt.Sprintf("\n- - - -\n ![](%s)\n", book.CoverImageUrl))
 
 	return sb.String()
-
 }
 
 func GenerateBookMarkdown(title string) string {
