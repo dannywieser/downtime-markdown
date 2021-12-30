@@ -4,6 +4,7 @@ import (
 	itunes "dgw/downtime/itunes"
 	output "dgw/downtime/output"
 	"flag"
+	"fmt"
 )
 
 func main() {
@@ -18,6 +19,8 @@ func main() {
 		Debug:     *debug,
 	}
 
-	results := itunes.DoSearch(params)
-	output.FormatResult(results[0])
+	result := itunes.DoSearch(params)
+	markdown := output.FormatResult(result)
+	fmt.Print(markdown)
+	output.SaveToFile(markdown, "test.md")
 }

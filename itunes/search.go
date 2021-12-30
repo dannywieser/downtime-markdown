@@ -22,7 +22,7 @@ func BuildQueryParams(req *http.Request, search SearchParams) {
 	req.URL.RawQuery = q.Encode()
 }
 
-func DoSearch(search SearchParams) []SearchResult {
+func DoSearch(search SearchParams) SearchResult {
 	client := http.Client{Timeout: timeout}
 
 	req, err := http.NewRequest(http.MethodGet, apiPath, nil)
@@ -53,5 +53,8 @@ func DoSearch(search SearchParams) []SearchResult {
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
 	}
-	return response.Results
+
+	result := response.Results[0]
+	parseResult(&result)
+	return result
 }
