@@ -12,10 +12,6 @@ type docsResult struct {
 	ISBN   []string `json:"isbn"`
 }
 
-type bookWrapper struct {
-	Books map[string]book
-}
-
 type book struct {
 	Title     string
 	Published string `json:"publish_date"`
