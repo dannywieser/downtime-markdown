@@ -2,6 +2,7 @@ package itunes
 
 import (
 	"dgw/downtime/config"
+	"dgw/downtime/model"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -22,7 +23,7 @@ var typeMap = map[string]string{
 	"movies": "movie",
 }
 
-func BuildQueryParams(req *http.Request, search SearchParams) {
+func BuildQueryParams(req *http.Request, search model.SearchParams) {
 	queryLimit := limit
 	if config.DebugMode {
 		queryLimit = "1"
@@ -36,7 +37,7 @@ func BuildQueryParams(req *http.Request, search SearchParams) {
 	req.URL.RawQuery = q.Encode()
 }
 
-func DoSearch(search SearchParams) SearchResult {
+func DoSearch(search model.SearchParams) SearchResult {
 	client := http.Client{Timeout: timeout}
 
 	req, err := http.NewRequest(http.MethodGet, searchPath, nil)

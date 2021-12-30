@@ -2,10 +2,9 @@ package main
 
 import (
 	"dgw/downtime/config"
-	itunes "dgw/downtime/itunes"
-	output "dgw/downtime/output"
+	"dgw/downtime/model"
+	"dgw/downtime/openlibrary"
 	"flag"
-	"fmt"
 )
 
 func main() {
@@ -14,14 +13,16 @@ func main() {
 	var debug = flag.Bool("debug", false, "Enable debug mode")
 	flag.Parse()
 
-	params := itunes.SearchParams{
+	params := model.SearchParams{
 		Title:     *title,
 		MediaType: *mediaType,
 	}
 	config.DebugMode = *debug
 
-	result := itunes.DoSearch(params)
-	markdown := output.FormatResult(result)
-	fmt.Print(markdown)
-	output.SaveToFile(markdown, *title)
+	openlibrary.DoSearch(params)
+
+	//result := itunes.DoSearch(params)
+	//markdown := output.FormatResult(result)
+	//fmt.Print(markdown)
+	//output.SaveToFile(markdown, *title)
 }
