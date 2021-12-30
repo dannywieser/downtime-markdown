@@ -15,6 +15,7 @@ type SearchResult struct {
 	ArtistIds       []int  `json:"ArtistIds"`
 	ArtworkUrl      string `json:"artworkUrl100"`
 	Genres          []string
+	PrimaryGenre    string `json:"primaryGenreName"`
 	ReleaseDate     time.Time
 	Artists         []string
 	MediaType       string

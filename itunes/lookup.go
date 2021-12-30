@@ -1,6 +1,7 @@
 package itunes
 
 import (
+	"dgw/downtime/config"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -16,7 +17,7 @@ func buildLookupParams(req *http.Request, id int) {
 
 }
 
-func LookupArtist(id int, debug bool) ArtistResult {
+func LookupArtist(id int) ArtistResult {
 	client := http.Client{Timeout: timeout}
 
 	req, err := http.NewRequest(http.MethodGet, lookupPath, nil)
@@ -37,8 +38,8 @@ func LookupArtist(id int, debug bool) ArtistResult {
 	}
 
 	body, readErr := ioutil.ReadAll(res.Body)
-	if debug {
-		fmt.Println(string(body))
+	if config.DebugMode {
+		fmt.Printf("\n=== Artist Lookup ====\n%s\n%s", req.URL, string(body))
 	}
 	if readErr != nil {
 		log.Fatal(readErr)

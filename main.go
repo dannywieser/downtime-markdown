@@ -1,6 +1,7 @@
 package main
 
 import (
+	"dgw/downtime/config"
 	itunes "dgw/downtime/itunes"
 	output "dgw/downtime/output"
 	"flag"
@@ -16,8 +17,8 @@ func main() {
 	params := itunes.SearchParams{
 		Title:     *title,
 		MediaType: *mediaType,
-		Debug:     *debug,
 	}
+	config.DebugMode = *debug
 
 	result := itunes.DoSearch(params)
 	markdown := output.FormatResult(result)

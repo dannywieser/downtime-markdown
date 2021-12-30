@@ -24,7 +24,7 @@ func parseResult(result *SearchResult, search SearchParams) {
 	result.Description = replaceHtmlWithMarkdown(result.Description)
 	result.ArtworkUrl = strings.Replace(result.ArtworkUrl, "100x100", "200x200", 1)
 	for _, artistId := range result.ArtistIds {
-		artist := LookupArtist(artistId, false)
+		artist := LookupArtist(artistId)
 		result.Artists = append(result.Artists, artist.Name)
 	}
 	result.MediaType = search.MediaType

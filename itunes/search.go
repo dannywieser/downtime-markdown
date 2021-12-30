@@ -1,29 +1,38 @@
 package itunes
 
 import (
+	"dgw/downtime/config"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
 const (
 	limit      = "1" // default to one result - use additional search terms to narrow the result
-	timeout    = time.Second * 2
+	timeout    = time.Second * 20
 	searchPath = "https://itunes.apple.com/search"
 )
 
 var typeMap = map[string]string{
-	"books": "ebook",
+	"books":  "ebook",
+	"movies": "movie",
 }
 
 func BuildQueryParams(req *http.Request, search SearchParams) {
+	queryLimit := limit
+	if config.DebugMode {
+		queryLimit = "1"
+	}
 	q := req.URL.Query()
-	q.Add("media", typeMap[search.MediaType])
+	q.Add("media", search.MediaType)
 	q.Add("term", search.Title)
-	q.Add("limit", limit)
+	q.Add("attribute", "titleTerm")
+
+	q.Add("limit", queryLimit)
 	req.URL.RawQuery = q.Encode()
 }
 
@@ -46,8 +55,9 @@ func DoSearch(search SearchParams) SearchResult {
 	}
 
 	body, readErr := ioutil.ReadAll(res.Body)
-	if search.Debug {
-		fmt.Println(string(body))
+	if config.DebugMode {
+		fmt.Printf("\n=== Search ====\n%s\n%s", req.URL, string(body))
+
 	}
 	if readErr != nil {
 		log.Fatal(readErr)
@@ -57,6 +67,19 @@ func DoSearch(search SearchParams) SearchResult {
 	jsonErr := json.Unmarshal(body, &response)
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
+	}
+
+	if response.ResultCount == 0 {
+		log.Fatal(fmt.Errorf("no results found for title [%s] and type [%s]", search.Title, search.MediaType))
+		os.Exit(1)
+	}
+
+	if config.DebugMode {
+		fmt.Printf("results: %d\n", response.ResultCount)
+		// fmt.Printf("\n=== Search ====\n%s\n%s", req.URL, string(body))
+		for _, debugResult := range response.Results {
+			fmt.Printf("Title: %s\n", debugResult.TrackName)
+		}
 	}
 
 	result := response.Results[0]
