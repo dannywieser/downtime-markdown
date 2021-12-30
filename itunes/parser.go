@@ -1,7 +1,6 @@
 package itunes
 
 import (
-	"dgw/downtime/model"
 	"strings"
 )
 
@@ -21,12 +20,20 @@ func replaceHtmlWithMarkdown(stringToParse string) string {
 	return updatedString
 }
 
-func parseResult(result *SearchResult, search model.SearchParams) {
-	result.Description = replaceHtmlWithMarkdown(result.Description)
-	result.ArtworkUrl = strings.Replace(result.ArtworkUrl, "100x100", "200x200", 1)
-	for _, artistId := range result.ArtistIds {
-		artist := LookupArtist(artistId)
-		result.Artists = append(result.Artists, artist.Name)
+func getSynopsis(result SearchResult) string {
+	if result.Description != "" {
+		return replaceHtmlWithMarkdown(result.Description)
 	}
-	result.MediaType = search.MediaType
+
+	if result.LongDescription != "" {
+		return replaceHtmlWithMarkdown(result.LongDescription)
+	}
+
+	return "Not Available"
+}
+
+func parseResult(result *SearchResult) {
+	// TODO: artists?
+	result.ArtworkUrl = strings.Replace(result.ArtworkUrl, "100x100", "200x200", 1)
+	result.Synopsis = getSynopsis(*result)
 }

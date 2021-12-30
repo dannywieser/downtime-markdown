@@ -2,13 +2,11 @@ package itunes
 
 import (
 	"dgw/downtime/config"
-	"dgw/downtime/model"
+	"dgw/downtime/utils"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -18,72 +16,42 @@ const (
 	searchPath = "https://itunes.apple.com/search"
 )
 
-var typeMap = map[string]string{
-	"books":  "ebook",
-	"movies": "movie",
-}
-
-func BuildQueryParams(req *http.Request, search model.SearchParams) {
+func BuildQueryParams(req *http.Request, title string, media string) {
 	queryLimit := limit
 	if config.DebugMode {
 		queryLimit = "1"
 	}
 	q := req.URL.Query()
-	q.Add("media", typeMap[search.MediaType])
-	q.Add("term", search.Title)
+	q.Add("media", media)
+	q.Add("term", title)
 	q.Add("attribute", "titleTerm")
 
 	q.Add("limit", queryLimit)
 	req.URL.RawQuery = q.Encode()
 }
 
-func DoSearch(search model.SearchParams) SearchResult {
-	client := http.Client{Timeout: timeout}
-
-	req, err := http.NewRequest(http.MethodGet, searchPath, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	BuildQueryParams(req, search)
-
-	res, getErr := client.Do(req)
-	if getErr != nil {
-		log.Fatal(getErr)
-	}
-
-	if res.Body != nil {
-		defer res.Body.Close()
-	}
-
-	body, readErr := ioutil.ReadAll(res.Body)
-	if config.DebugMode {
-		fmt.Printf("\n=== Search ====\n%s\n%s", req.URL, string(body))
-
-	}
-	if readErr != nil {
-		log.Fatal(readErr)
-	}
+func DoSearch(title string, media string) SearchResult {
+	params := make(map[string]string)
+	params["media"] = media
+	params["term"] = title
+	params["attribute"] = "titleTerm"
+	params["limit"] = limit
+	responseBody := utils.DoGet(searchPath, params)
 
 	var response SearchResultWrapper
-	jsonErr := json.Unmarshal(body, &response)
+	jsonErr := json.Unmarshal(responseBody, &response)
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
 	}
 
-	if response.ResultCount == 0 {
-		log.Fatal(fmt.Errorf("no results found for title [%s] and type [%s]", search.Title, search.MediaType))
-		os.Exit(1)
+	var result SearchResult
+	if response.ResultCount > 0 {
+		fmt.Printf("  ✅ iTunes Search API\n")
+		result = response.Results[0]
+		parseResult(&result)
+	} else {
+		fmt.Printf("  ❌ iTunes Search API\n")
 	}
 
-	if config.DebugMode {
-		fmt.Printf("results: %d\n", response.ResultCount)
-		// fmt.Printf("\n=== Search ====\n%s\n%s", req.URL, string(body))
-		for _, debugResult := range response.Results {
-			fmt.Printf("Title: %s\n", debugResult.TrackName)
-		}
-	}
-
-	result := response.Results[0]
-	parseResult(&result, search)
 	return result
 }

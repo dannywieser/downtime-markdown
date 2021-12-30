@@ -19,6 +19,7 @@ type SearchResult struct {
 	ReleaseDate     time.Time
 	Artists         []string
 	MediaType       string
+	Synopsis        string
 }
 
 type ArtistResultWrapper struct {
@@ -29,10 +30,4 @@ type ArtistResultWrapper struct {
 type ArtistResult struct {
 	Name string `json:"artistName"`
 	Url  string `json:"artistLinkUrl"`
-}
-
-type SearchParams struct {
-	Title     string
-	MediaType string
-	Debug     bool
 }

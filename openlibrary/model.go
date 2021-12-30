@@ -12,14 +12,20 @@ type docsResult struct {
 	ISBN   []string `json:"isbn"`
 }
 
-type book struct {
+type OpenLibraryBook struct {
 	Title     string
 	Published string `json:"publish_date"`
 	Pages     int    `json:"number_of_pages"`
-	Cover     cover
+	Cover     OpenLibraryCover
+	Authors   []OpenLibraryAuthor
 }
 
-type cover struct {
+type OpenLibraryAuthor struct {
+	Url  string
+	Name string
+}
+
+type OpenLibraryCover struct {
 	Small  string
 	Medium string
 	Large  string

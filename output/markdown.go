@@ -8,17 +8,6 @@ import (
 	"strings"
 )
 
-const (
-	h2Prefix  = "\n##"
-	tagPrefix = "#downtime"
-	genreTag  = "genres"
-)
-
-var artistTitleMap = map[string]string{
-	"books":  "Author",
-	"movies": "Director",
-}
-
 func h2(title string) string {
 	return fmt.Sprintf("%s %s\n", h2Prefix, title)
 }
@@ -40,24 +29,6 @@ func FormatArtist(result itunes.SearchResult) string {
 	} else {
 		sb.WriteString(fmt.Sprintf("%s\n", buildTag(artistTag, result.ArtistName)))
 	}
-	return sb.String()
-}
-
-func FormatSynopsis(result itunes.SearchResult) string {
-	var sb strings.Builder
-	sb.WriteString(h2("Synopsis"))
-
-	if result.Description != "" {
-		sb.WriteString(fmt.Sprintf("%s\n", result.Description))
-		return sb.String()
-	}
-
-	if result.LongDescription != "" {
-		sb.WriteString(fmt.Sprintf("%s\n", result.LongDescription))
-		return sb.String()
-	}
-
-	sb.WriteString("Not Available\n")
 	return sb.String()
 }
 

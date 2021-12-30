@@ -1,10 +1,10 @@
 package main
 
 import (
+	"dgw/downtime/books"
 	"dgw/downtime/config"
-	"dgw/downtime/model"
-	"dgw/downtime/openlibrary"
 	"flag"
+	"fmt"
 )
 
 func main() {
@@ -12,17 +12,13 @@ func main() {
 	var mediaType = flag.String("type", "", "books|movies|tv|apps")
 	var debug = flag.Bool("debug", false, "Enable debug mode")
 	flag.Parse()
-
-	params := model.SearchParams{
-		Title:     *title,
-		MediaType: *mediaType,
-	}
 	config.DebugMode = *debug
 
-	openlibrary.DoSearch(params)
+	markdown := ""
+	if *mediaType == "books" {
+		markdown = books.GenerateBookMarkdown(*title)
+	}
 
-	//result := itunes.DoSearch(params)
-	//markdown := output.FormatResult(result)
-	//fmt.Print(markdown)
-	//output.SaveToFile(markdown, *title)
+	fmt.Printf("\n\n======== Results ==========\n\n")
+	fmt.Print(markdown)
 }
